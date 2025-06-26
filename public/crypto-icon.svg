@@ -1,0 +1,20 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3B82F6" />
+      <stop offset="100%" stop-color="#1D4ED8" />
+    </linearGradient>
+  </defs>
+  
+  <!-- 外圈 -->
+  <circle cx="16" cy="16" r="15" fill="url(#gradient)" stroke="#1E3A8A" stroke-width="2"/>
+  
+  <!-- 比特币符号 -->
+  <path d="M12 8h8v2h-2v12h2v2h-8v-2h2V10h-2V8z" fill="white"/>
+  <path d="M14 12h4c1.1 0 2 .9 2 2s-.9 2-2 2h-4v-4z" fill="white"/>
+  <path d="M14 16h4c1.1 0 2 .9 2 2s-.9 2-2 2h-4v-4z" fill="white"/>
+  
+  <!-- 内部装饰线条 -->
+  <circle cx="16" cy="16" r="11" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+  <circle cx="16" cy="16" r="7" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+</svg> 
