@@ -89,4 +89,22 @@ export interface FullscreenData {
   priceChangePercent: number;
   volume: number;
   klineData: KlineData[];
+}
+
+// 快讯相关类型定义
+export interface NewsItem {
+  nnewflash_id: string;
+  stitle: string;
+  sabstract: string;
+  surl: string;
+  dcreate_time: string;
+  is_hot: string;
+  times: string;
+}
+
+export interface NewsResponse {
+  success: string;
+  time: string;
+  msg: string;
+  content: NewsItem[];
 } 

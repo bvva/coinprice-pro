@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, TrendingUp, TrendingDown } from 'lucide-react';
+import { X, TrendingUp, TrendingDown, Newspaper } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { CryptoData, KlineData } from '../types';
 import { MiniChart } from './MiniChart';
+import { DraggableNewsCard } from './DraggableNewsCard';
 
 interface FullscreenPriceProps {
   isOpen: boolean;
@@ -14,6 +15,11 @@ interface FullscreenPriceProps {
   fullscreenMode: 'browser' | 'ui-only';
   fullscreenInfoMode: 'rich' | 'simple';
   fullscreenBackground: 'default' | 'gradient' | 'matrix' | 'wave' | 'particle' | 'neon' | 'cosmic' | 'pixel' | 'hacker';
+  language: 'zh' | 'en';
+  news: any[];
+  newsLoading: boolean;
+  newsError: string | null;
+  onNewsRefresh: () => void;
 }
 
 export const FullscreenPrice: React.FC<FullscreenPriceProps> = ({
@@ -24,7 +30,12 @@ export const FullscreenPrice: React.FC<FullscreenPriceProps> = ({
   symbol,
   fullscreenMode,
   fullscreenInfoMode,
-  fullscreenBackground
+  fullscreenBackground,
+  language,
+  news,
+  newsLoading,
+  newsError,
+  onNewsRefresh
 }) => {
   const { t } = useTranslation();
   const [showControls, setShowControls] = useState(true);
@@ -32,6 +43,7 @@ export const FullscreenPrice: React.FC<FullscreenPriceProps> = ({
   const [currentTime, setCurrentTime] = useState(new Date());
   const [originalTitle, setOriginalTitle] = useState<string>('');
   const [matrixRain, setMatrixRain] = useState<JSX.Element[]>([]);
+  const [showNewsCard, setShowNewsCard] = useState(true);
 
   // 数字雨类型定义
   interface MatrixChar {
@@ -640,18 +652,36 @@ export const FullscreenPrice: React.FC<FullscreenPriceProps> = ({
               {matrixRain}
             </div>
           )}
-          {/* 关闭按钮 */}
+          {/* 控制按钮组 */}
           <AnimatePresence>
             {showControls && (
-              <motion.button
+              <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.8 }}
-                onClick={handleClose}
-                className="absolute top-8 right-8 z-50 p-4 rounded-full bg-white/10 hover:bg-white/20 transition-colors backdrop-blur-sm"
+                className="absolute top-8 right-8 z-50 flex space-x-2"
               >
-                <X className="w-8 h-8 text-white" />
-              </motion.button>
+                {/* 快讯按钮 */}
+                <button
+                  onClick={() => setShowNewsCard(!showNewsCard)}
+                  className={`p-3 rounded-full transition-colors backdrop-blur-sm ${showNewsCard
+                    ? 'bg-blue-500/30 hover:bg-blue-500/40 border border-blue-400/50'
+                    : 'bg-white/10 hover:bg-white/20'
+                    }`}
+                  title={language === 'zh' ? (showNewsCard ? '隐藏快讯' : '显示快讯') : (showNewsCard ? 'Hide News' : 'Show News')}
+                >
+                  <Newspaper className="w-6 h-6 text-white" />
+                </button>
+
+                {/* 关闭按钮 */}
+                <button
+                  onClick={handleClose}
+                  className="p-3 rounded-full bg-white/10 hover:bg-white/20 transition-colors backdrop-blur-sm"
+                  title={language === 'zh' ? '关闭全屏' : 'Exit Fullscreen'}
+                >
+                  <X className="w-6 h-6 text-white" />
+                </button>
+              </motion.div>
             )}
           </AnimatePresence>
 
@@ -812,6 +842,17 @@ export const FullscreenPrice: React.FC<FullscreenPriceProps> = ({
               </motion.div>
             )}
           </div>
+
+          {/* 可拖动的快讯卡片 */}
+          <DraggableNewsCard
+            language={language}
+            isVisible={showNewsCard}
+            onToggleVisibility={() => setShowNewsCard(false)}
+            news={news}
+            loading={newsLoading}
+            error={newsError}
+            onRefresh={onNewsRefresh}
+          />
         </motion.div>
       )}
     </AnimatePresence>
